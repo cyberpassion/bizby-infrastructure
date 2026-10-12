@@ -1,0 +1,14 @@
+---
+# Intentionally guarded placeholder. Do not restart services blindly.
+- name: Service restart placeholder
+  hosts: staging
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Stop until an explicit service allowlist is defined
+      ansible.builtin.fail:
+        msg: >-
+          This is a safety placeholder and does not restart anything.
+          Define an explicit service allowlist and maintenance/rollback
+          procedure before enabling service restarts.

@@ -1,0 +1,16 @@
+---
+# Safe starter: inspect UFW status only; does not change firewall rules.
+- name: Inspect firewall status on staging
+  hosts: staging
+  gather_facts: false
+
+  tasks:
+    - name: Check UFW status
+      ansible.builtin.command: ufw status verbose
+      register: ufw_status
+      changed_when: false
+      failed_when: false
+
+    - name: Show UFW status
+      ansible.builtin.debug:
+        msg: "{{ ufw_status.stdout | default('UFW is not installed or status could not be read', true) }}"

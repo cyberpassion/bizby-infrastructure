@@ -1,0 +1,16 @@
+---
+# REVIEW BEFORE RUNNING. This changes the server by installing packages.
+- name: Install explicitly listed packages on staging
+  hosts: staging
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Ensure example packages are installed
+      ansible.builtin.apt:
+        name:
+          - nginx
+          - php8.3-fpm
+          - redis-server
+        state: present
+        update_cache: true

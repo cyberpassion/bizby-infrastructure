@@ -1,0 +1,13 @@
+---
+# Intentionally guarded placeholder. Define and test your deployment strategy first.
+- name: Laravel deployment placeholder
+  hosts: staging
+  gather_facts: false
+
+  tasks:
+    - name: Stop until deployment variables and steps are reviewed
+      ansible.builtin.fail:
+        msg: >-
+          This is a safety placeholder and does not deploy anything.
+          Define the app path, release strategy, maintenance behavior,
+          migrations policy, permissions, rollback, and health checks first.

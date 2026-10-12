@@ -1,0 +1,41 @@
+---
+- name: Audit Bizby staging server
+  hosts: staging
+  gather_facts: true
+
+  tasks:
+    - name: Display operating system
+      ansible.builtin.debug:
+        msg: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    - name: Check memory, disk, and uptime
+      ansible.builtin.command: "{{ item }}"
+      loop:
+        - free -h
+        - df -h /
+        - uptime
+      register: system_checks
+      changed_when: false
+
+    - name: Show system check output
+      ansible.builtin.debug:
+        msg: "{{ item.stdout }}"
+      loop: "{{ system_checks.results }}"
+
+    - name: Check common service states without failing if absent
+      ansible.builtin.command: "systemctl is-active {{ item }}"
+      loop:
+        - nginx
+        - apache2
+        - php8.3-fpm
+        - redis-server
+        - mysql
+        - mariadb
+      register: service_checks
+      changed_when: false
+      failed_when: false
+
+    - name: Show service states
+      ansible.builtin.debug:
+        msg: "{{ item.item }}: {{ item.stdout | default('unknown') }}"
+      loop: "{{ service_checks.results }}"

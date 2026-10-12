@@ -1,0 +1,28 @@
+---
+# Safe starter: inspect and validate; does not write Nginx configuration.
+- name: Inspect Nginx on staging
+  hosts: staging
+  gather_facts: false
+
+  tasks:
+    - name: Check whether Nginx is installed
+      ansible.builtin.command: nginx -v
+      register: nginx_version
+      changed_when: false
+      failed_when: false
+
+    - name: Show Nginx version
+      ansible.builtin.debug:
+        msg: "{{ nginx_version.stderr | default(nginx_version.stdout, true) }}"
+
+    - name: Validate Nginx configuration if Nginx is installed
+      ansible.builtin.command: nginx -t
+      register: nginx_validation
+      changed_when: false
+      failed_when: false
+      when: nginx_version.rc == 0
+
+    - name: Show Nginx validation result
+      ansible.builtin.debug:
+        msg: "{{ nginx_validation.stderr | default(nginx_validation.stdout, true) }}"
+      when: nginx_version.rc == 0

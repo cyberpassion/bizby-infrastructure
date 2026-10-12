@@ -1,0 +1,26 @@
+---
+# Safe starter: inspect PHP; does not modify PHP-FPM settings.
+- name: Inspect PHP on staging
+  hosts: staging
+  gather_facts: false
+
+  tasks:
+    - name: Check PHP CLI version
+      ansible.builtin.command: php -v
+      register: php_version
+      changed_when: false
+      failed_when: false
+
+    - name: Show PHP version
+      ansible.builtin.debug:
+        msg: "{{ php_version.stdout | default('PHP CLI was not found', true) }}"
+
+    - name: Check PHP 8.3 FPM service
+      ansible.builtin.command: systemctl is-active php8.3-fpm
+      register: php_fpm_status
+      changed_when: false
+      failed_when: false
+
+    - name: Show PHP-FPM service status
+      ansible.builtin.debug:
+        msg: "php8.3-fpm: {{ php_fpm_status.stdout | default('unknown', true) }}"

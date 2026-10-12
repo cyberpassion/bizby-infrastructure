@@ -1,0 +1,16 @@
+---
+# Safe starter: inspect Redis; does not modify Redis configuration.
+- name: Inspect Redis on staging
+  hosts: staging
+  gather_facts: false
+
+  tasks:
+    - name: Check Redis service status
+      ansible.builtin.command: systemctl is-active redis-server
+      register: redis_status
+      changed_when: false
+      failed_when: false
+
+    - name: Show Redis status
+      ansible.builtin.debug:
+        msg: "redis-server: {{ redis_status.stdout | default('unknown', true) }}"
