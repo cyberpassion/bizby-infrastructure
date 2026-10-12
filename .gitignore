@@ -1,0 +1,18 @@
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+vault-password*
+secrets.yml
+secrets.yaml
+
+# Ansible generated files
+*.retry
+__pycache__/
+*.pyc
+
+# Local inventory files containing server details
+inventory/**/hosts.local.ini
